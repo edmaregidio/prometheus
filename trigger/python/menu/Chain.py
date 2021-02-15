@@ -126,7 +126,6 @@ class Chain( Algorithm ):
 
     from Gaugi import ToolSvc
     emulator = ToolSvc.retrieve("Emulator")
-
     if emulator.retrieve( self.__l1caloItem ).initialize().isFailure():
       MSG_FATAL( self, "It's not possible to initialize the tool with name %s", self.__l1caloItem )
     if emulator.retrieve( self.__l2caloItem ).initialize().isFailure():
@@ -188,7 +187,7 @@ class Chain( Algorithm ):
     accept.setCutResult( 'L1Calo' , True )
 
     # Is passed by L2Calo et cut? AND hypo cut
-    em = context.getHandler("HLT__FastCaloContainer")
+    em = context.getHandler("HLT__TrigEMClusterContainer")
 
     if  not ( ( em.et() > self.__l2caloEtCut ) and bool(dec.accept( self.__l2caloItem )) ):
       return accept
@@ -200,7 +199,7 @@ class Chain( Algorithm ):
     if self.__trigInfo.signature() == 'electron':
       cont = context.getHandler("HLT__FastElectronContainer")
     else:
-      cont = context.getHandler("HLT__FastPhotonContainer")
+      cont = context.getHandler("HLT__PhotonContainer")
 
     # Is passed by L2 electron/photon, treat events with container with size equal zero
     passedL2 = bool(dec.accept( self.__l2Item )) if cont.size() > 0 else False

@@ -100,8 +100,8 @@ class RingerSelectorTool(Algorithm):
 
 
     from ROOT import TEnv
+    print(configPath)
     env = TEnv( configPath )
-
     version = env.GetValue("__version__", '')
     number_of_models = env.GetValue("Model__size", 0)
     etmin_list = treat_float( env, 'Model__etmin' )
@@ -142,7 +142,7 @@ class RingerSelectorTool(Algorithm):
   def accept( self, context):
 
     accept = self.__getAcceptInfo()
-    fc = context.getHandler("HLT__FastCaloContainer")
+    fc = context.getHandler("HLT__TrigEMClusterContainer")
     eventInfo = context.getHandler( "EventInfoContainer" )
     avgmu = eventInfo.avgmu()
 

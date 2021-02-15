@@ -4,7 +4,7 @@ __all__ =  [
             # Old T2Calo selector
             "installTrigEgammaL2CaloSelectors",
             "installTrigEgammaL2ElectronSelectors",
-
+            "installTrigEgammaL2PhotonCaloSelectors",
             # Zee for electrons signatures
             "installElectronL2CaloRingerSelector_v6",
             "installElectronL2CaloRingerSelector_v8",
@@ -109,19 +109,27 @@ def attach( hypos ):
 
 
 def installTrigEgammaL2CaloSelectors():
-
   from TrigEgammaEmulationTool import TrigEgammaL2CaloSelectorTool
   hypos = [
-        TrigEgammaL2CaloSelectorTool("T0HLTElectronT2CaloTight"   , OperationPoint ='lhtight'  ) ,
-        TrigEgammaL2CaloSelectorTool("T0HLTElectronT2CaloMedium"  , OperationPoint ='lhmedium' ) ,
-        TrigEgammaL2CaloSelectorTool("T0HLTElectronT2CaloLoose"   , OperationPoint ='lhloose'  ) ,
-        TrigEgammaL2CaloSelectorTool("T0HLTElectronT2CaloVLoose"  , OperationPoint ='lhvloose' ) ,
-      ]
-
+      TrigEgammaL2CaloSelectorTool("T0HLTElectronT2CaloTight"   , OperationPoint ='lhtight'  ) ,
+      TrigEgammaL2CaloSelectorTool("T0HLTElectronT2CaloMedium"  , OperationPoint ='lhmedium' ) ,
+      TrigEgammaL2CaloSelectorTool("T0HLTElectronT2CaloLoose"   , OperationPoint ='lhloose'  ) ,
+      TrigEgammaL2CaloSelectorTool("T0HLTElectronT2CaloVLoose"  , OperationPoint ='lhvloose' ) ,
+    ]  
+  
   return attach(hypos)
 
 
 
+def installTrigEgammaL2PhotonCaloSelectors():
+  from TrigEgammaEmulationTool import TrigEgammaL2CaloSelectorTool
+  hypos = [
+      TrigEgammaL2CaloSelectorTool("T0HLTPhotonT2CaloTight"   , OperationPoint ='tight'  ) ,
+      TrigEgammaL2CaloSelectorTool("T0HLTPhotonT2CaloMedium"  , OperationPoint ='medium' ) ,
+      TrigEgammaL2CaloSelectorTool("T0HLTPhotonT2CaloLoose"   , OperationPoint ='loose'  ) ,
+    ]  
+  
+  return attach(hypos)
 
 def installTrigEgammaL2ElectronSelectors():
 
@@ -424,7 +432,7 @@ def installPhotonL2CaloRingerSelector_v1():
   '''
   from TrigEgammaEmulationTool import RingerSelectorTool
   import os
-  calibpath = os.environ['PRT_PATH'] + '/trigger/data/zrad/TrigL2_20200909_v1'
+  calibpath = os.environ['PRT_PATH'] + '/trigger/data/zrad/TrigL2_20211102_v1'
 
   def getPatterns( context ):
     def norm1( data ):
@@ -432,8 +440,7 @@ def installPhotonL2CaloRingerSelector_v1():
     fc = context.getHandler("HLT__TrigEMClusterContainer")
     rings = norm1( fc.ringsE() )
     return [rings]
-
-
+  
   hypos = [
               RingerSelectorTool( "T0HLTPhotonRingerTight_v1" ,getPatterns  , ConfigFile = calibpath+'/PhotonRingerTightTriggerConfig.conf' ),
               RingerSelectorTool( "T0HLTPhotonRingerMedium_v1",getPatterns  , ConfigFile = calibpath+'/PhotonRingerMediumTriggerConfig.conf'),
