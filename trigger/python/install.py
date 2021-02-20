@@ -9,6 +9,7 @@ __all__ =  [
             "installElectronL2CaloRingerSelector_v6",
             "installElectronL2CaloRingerSelector_v8",
             "installElectronL2CaloRingerSelector_v9",
+            "installElectronL2CaloRingerSelector_v9_r2",
             "installElectronL2CaloRingerSelector_v10",
             "installElectronL2CaloRingerSelector_v11",
             "installElectronL2RingerSelector_v1_el",
@@ -40,6 +41,7 @@ def installElectronRingerZeeFromVersion( key , step="fast_calo"):
                   "v6"                 : installElectronL2CaloRingerSelector_v6(),
                   "v8"                 : installElectronL2CaloRingerSelector_v8(),
                   "v9"                 : installElectronL2CaloRingerSelector_v9(),
+                  "v9_r2"              : installElectronL2CaloRingerSelector_v9_r2(),
                   "v10"                : installElectronL2CaloRingerSelector_v10(),
                   "v11"                : installElectronL2CaloRingerSelector_v11(),
                 },
@@ -235,6 +237,49 @@ def installElectronL2CaloRingerSelector_v9():
       RingerSelectorTool( "T0HLTElectronRingerMedium_v9"   , getPatterns, ConfigFile = calibpath+'/ElectronRingerMediumTriggerConfig.conf'    ),
       RingerSelectorTool( "T0HLTElectronRingerLoose_v9"    , getPatterns, ConfigFile = calibpath+'/ElectronRingerLooseTriggerConfig.conf'     ),
       RingerSelectorTool( "T0HLTElectronRingerVeryLoose_v9", getPatterns, ConfigFile = calibpath+'/ElectronRingerVeryLooseTriggerConfig.conf' ),
+    ]
+
+  return attach(hypos)
+
+###########################################################
+################## Testing 2020 tuning  ###################
+###########################################################
+
+def installElectronL2CaloRingerSelector_v9_r2():
+
+# Using shower shapes + rings here (same vector structure) 
+
+  from TrigEgammaEmulationTool import RingerSelectorTool
+  import os
+  calibpath = os.environ['PRT_PATH'] + '/trigger/data/zee/TrigL2_20210219_v9_r2'
+
+
+  def getPatterns( context ):
+    def norm1( data ):
+      return (data/abs(sum(data))).reshape((1,100))
+    fc = context.getHandler("HLT__TrigEMClusterContainer")
+    rings = norm1( fc.ringsE() )
+    reta = fc.reta()
+    eratio = fc.eratio()
+    f1 = fc.f1()/0.6
+    f3 = fc.f3()/0.04
+    weta2 =fc.weta2()/0.02
+    wstot = fc.wstot()
+    if eratio>10.0:
+      eratio = 0.0
+    elif eratio>1.0:
+      eratio=1.0
+    if wstot<-99:
+      wstot=0.0
+
+    return [rings, np.array([[reta,eratio,f1,f3,weta2,wstot]])]
+
+
+  hypos = [
+      RingerSelectorTool( "T0HLTElectronRingerTight_v9_r2"    , getPatterns, ConfigFile = calibpath+'/ElectronRingerTightTriggerConfig.conf'     ),
+      RingerSelectorTool( "T0HLTElectronRingerMedium_v9_r2"   , getPatterns, ConfigFile = calibpath+'/ElectronRingerMediumTriggerConfig.conf'    ),
+      RingerSelectorTool( "T0HLTElectronRingerLoose_v9_r2"    , getPatterns, ConfigFile = calibpath+'/ElectronRingerLooseTriggerConfig.conf'     ),
+      RingerSelectorTool( "T0HLTElectronRingerVeryLoose_v9_r2", getPatterns, ConfigFile = calibpath+'/ElectronRingerVeryLooseTriggerConfig.conf' ),
     ]
 
   return attach(hypos)
