@@ -93,9 +93,9 @@ class TrigEMCluster(EDM):
           Retrieve the L2Calo Ringer Rins information from Physval or SkimmedNtuple
         """
         if self._dataframe is DataframeEnum.Electron_v1 or DataframeEnum.Photon_v1:
-            rings = stdvector_to_list(self._event.trig_L2_calo_rings)
-            #return np.array(rings , dtype=np.float32)
-            return np.ones(106)
+            rings = stdvector_to_list(self._event.trig_L2_calo_rings) 
+            return np.array(rings , dtype=np.float32)
+            
         else:
             self._logger.warning("Impossible to retrieve the value of L2Calo Ringer Rings. Unknow dataframe")
             return None

@@ -195,7 +195,6 @@ class Chain( Algorithm ):
     accept.setCutResult( 'L2Calo' , True )
 
 
-    print(self.__trigInfo.signature())
     if self.__trigInfo.signature() == 'electron':
       cont = context.getHandler("HLT__TrigElectronContainer")
     else:

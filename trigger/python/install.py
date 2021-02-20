@@ -271,9 +271,9 @@ def installElectronL2CaloRingerSelector_v9_r2():
       eratio=1.0
     if wstot<-99:
       wstot=0.0
-
-    return [rings, np.array([[reta,eratio,f1,f3,weta2,wstot]])]
-
+    #return rings
+    data_shower = np.array([[reta,eratio,f1,f3,weta2,wstot]])
+    return [np.concatenate((rings,data_shower),axis=1)]
 
   hypos = [
       RingerSelectorTool( "T0HLTElectronRingerTight_v9_r2"    , getPatterns, ConfigFile = calibpath+'/ElectronRingerTightTriggerConfig.conf'     ),

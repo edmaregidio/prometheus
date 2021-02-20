@@ -169,7 +169,8 @@ class RingerSelectorTool(Algorithm):
     # Until here, we have all to run it!
 
     data = self.__generator( context )
-    # compute the output
+    
+   # compute the output
     if data:
       output = model.predict( data )
     else:
